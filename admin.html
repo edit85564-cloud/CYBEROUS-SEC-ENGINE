@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CYBEROUS SEC | ADMIN</title>
+    <link rel="stylesheet" href="/static/monolith.css">
+</head>
+<body class="admin-view">
+    <div class="wrapper">
+        <aside class="sidebar">
+            <h2>SOVEREIGN_CTRL</h2>
+            <button id="killBtn" class="kill-switch online" onclick="toggleSystem()">SYSTEM_ONLINE</button>
+            <button onclick="location.href='/'" class="logout-btn">EXIT</button>
+        </aside>
+        <main class="main">
+            <div class="header-row">
+                <h1>HARVEST_VAULT_LIVE</h1>
+                <div id="clock">00:00:00</div>
+            </div>
+            <table class="log-table">
+                <thead><tr><th>TS</th><th>VIOLATION</th><th>DATA</th><th>ACTION</th></tr></thead>
+                <tbody id="log-body"></tbody>
+            </table>
+        </main>
+    </div>
+    <script>
+        const KEY = "CYBER_OP_2026_STRICT";
+        async function toggleSystem() {
+            const res = await fetch('/api/toggle-system', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({key: KEY})
+            });
+            const d = await res.json();
+            const btn = document.getElementById('killBtn');
+            btn.innerText = `SYSTEM_${d.new_state}`;
+            btn.classList.toggle('online', d.new_state === 'ONLINE');
+        }
+        async function loadLogs() {
+            try {
+                const res = await fetch(`/api/harvest?key=${KEY}`);
+                const logs = await res.json();
+                document.getElementById('log-body').innerHTML = logs.reverse().map(l => `
+                    <tr><td>${l.TS}</td><td class="threat">${l.VIOLATION}</td><td>${l.DATA}</td><td>${l.PILLAR_REACTION}</td></tr>
+                `).join('');
+            } catch(e) {}
+        }
+        setInterval(loadLogs, 5000);
+        loadLogs();
+        setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CYBEROUS SEC | THE GATE</title>
+    <link rel="stylesheet" href="/static/monolith.css">
+</head>
+<body>
+    <div id="boot-sequence">
+        <div class="boot-text" id="boot-log"></div>
+    </div>
+
+    <div class="monolith-container">
+        <header>
+            <div class="logo-box">
+                <div class="logo-icon"></div>
+                <h1>CYBEROUS_SEC</h1>
+            </div>
+            <div class="status-indicator">NODE_ACTIVE</div>
+        </header>
+
+        <main id="terminal-wrapper">
+            <div id="output-stream"></div>
+            <div class="input-line">
+                <span class="prompt">OPR@SEC:></span>
+                <input type="text" id="terminal-input" autofocus autocomplete="off">
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/audio_engine.js"></script>
+    <script src="/static/terminal_ui.js"></script>
+    <script>
+        const logs = [
+            "INITIALIZING SOVEREIGN_CORE...",
+            "LOADING 57_IMMUTABLE_LAWS...",
+            "MOUNTING HARVEST_VAULT...",
+            "HANDSHAKE GATE: ARMED",
+            "SYSTEM READY."
+        ];
+
+        async function runBoot() {
+            const logDiv = document.getElementById('boot-log');
+            for(let msg of logs) {
+                const p = document.createElement('p');
+                p.innerText = `[OK] ${msg}`;
+                logDiv.appendChild(p);
+                await new Promise(r => setTimeout(r, 600));
+            }
+            setTimeout(() => {
+                document.getElementById('boot-sequence').style.display = 'none';
+                startBeat(); // Trigger audio from audio_engine.js
+            }, 1000);
+        }
+        window.onload = runBoot;
+    </script>
+</body>
+</html>
